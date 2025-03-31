@@ -82,6 +82,22 @@ WeatherApp/
 
 ---
 
+🏗️ Architectural Decisions
+
+React Native for Cross-Platform Support – Chosen to ensure compatibility with both iOS and Android using a single codebase.
+
+Context API for State Management – Used for managing weather data and theme preference efficiently without needing a more complex solution like Redux.
+
+Axios for API Calls – Selected for making HTTP requests due to its simplicity and built-in error handling.
+
+Component-Based Structure – The app follows a modular approach where UI elements are encapsulated within reusable components.
+
+Theme Management – Implemented light and dark mode using React Context to allow seamless UI switching.
+
+Environment Variables – API keys are stored in a .env file to enhance security and flexibility.
+
+---
+
 ## **✅ To-Do List (Future Enhancements)**  
 - 📍 **Location-based weather** (auto-fetch city)  
 - 📊 **Hourly & Weekly Forecast**  

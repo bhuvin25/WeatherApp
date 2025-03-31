@@ -14,6 +14,7 @@ const WeatherCard = ({ weather, darkMode }) => {
         {weather.weather[0].description}
       </Text>
       <Image
+        testID='weather-icon'
         source={{ uri: `https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png` }}
         style={styles.weatherIcon}
       />
