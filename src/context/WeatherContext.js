@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect, useCallback } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { fetchWeatherData } from '../services/WeatherService';
 
@@ -18,19 +18,21 @@ export const WeatherProvider = ({ children }) => {
     loadLastCity();
   }, []);
 
-  const fetchWeather = async (cityName) => {
+  const fetchWeather = useCallback(async (cityName) => {
     setLoading(true);
     setError(null);
+  
     try {
       const data = await fetchWeatherData(cityName);
       setWeather(data);
-      await AsyncStorage.setItem('lastCity', cityName);
-    } catch {
-      setError('City not found');
+      setCity(cityName);
+      await AsyncStorage.setItem("lastCity", cityName);
+    } catch (err) {
+      setError(err.message);
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   return (
     <WeatherContext.Provider value={{ weather, loading, error, city, setCity, fetchWeather }}>
