@@ -64,10 +64,6 @@ const WeatherScreen = () => {
           />
         </View>
 
-        <TouchableOpacity style={styles.button} onPress={() => debouncedFetchWeather(input)}>
-          <Text style={styles.buttonText}>Get Weather</Text>
-        </TouchableOpacity>
-
         {loading && <ActivityIndicator size="large" color={darkMode ? "white" : "blue"} />}
         {error && <Text style={[styles.error, darkMode ? styles.darkText : styles.lightText]}>{error}</Text>}
 
