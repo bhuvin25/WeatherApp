@@ -25,14 +25,13 @@ const WeatherScreen = () => {
 
   const debouncedFetchWeather = useCallback(
     debounce((city) => {
+      if (city.trim().length === 0) return;
+  
       if (!isConnected) {
         Alert.alert("No Internet", "Please check your connection and try again.");
         return;
       }
-      if (!city.trim()) {
-        Alert.alert("Invalid Input", "Please enter a city name.");
-        return;
-      }
+  
       fetchWeather(city);
     }, 500),
     [isConnected, fetchWeather]
