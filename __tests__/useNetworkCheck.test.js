@@ -3,17 +3,16 @@ import { render, waitFor } from "@testing-library/react-native";
 import { Alert, Text } from "react-native";
 import useNetworkCheck from "../src/hooks/useNetworkCheck";
 import NetInfo from "@react-native-community/netinfo";
+import { Provider } from "react-redux";
+import store from "../src/redux/store";
 
-// Mock NetInfo
 jest.mock("@react-native-community/netinfo", () => ({
   addEventListener: jest.fn(),
   fetch: jest.fn(),
 }));
 
-// Mock Alert
 jest.spyOn(Alert, "alert").mockImplementation(() => {});
 
-// Test Component to use the hook
 const TestComponent = () => {
   const isConnected = useNetworkCheck();
   return <Text testID="network-status">{isConnected ? "Online" : "Offline"}</Text>;
@@ -30,7 +29,11 @@ describe("useNetworkCheck Hook", () => {
       return jest.fn();
     });
 
-    const { getByTestId } = render(<TestComponent />);
+    const { getByTestId } = render(
+      <Provider store={store}>
+        <TestComponent />
+      </Provider>
+    );
     await waitFor(() => expect(getByTestId("network-status").props.children).toBe("Online"));
   });
 
@@ -40,7 +43,11 @@ describe("useNetworkCheck Hook", () => {
       return jest.fn();
     });
 
-    const { getByTestId } = render(<TestComponent />);
+    const { getByTestId } = render(
+      <Provider store={store}>
+        <TestComponent />
+      </Provider>
+    );
     
     await waitFor(() => {
       expect(getByTestId("network-status").props.children).toBe("Offline");

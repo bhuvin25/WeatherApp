@@ -1,41 +1,27 @@
-import React, { useContext, useState, useCallback } from "react";
+import React from "react";
 import {
   View,
   TextInput,
-  TouchableOpacity,
   ActivityIndicator,
   Text,
   Switch,
-  Alert,
   SafeAreaView,
 } from "react-native";
-import { WeatherContext } from "../context/WeatherContext";
-import { ThemeContext } from "../context/ThemeContext";
 import WeatherCard from "../components/WeatherCard";
 import styles from "../styles/styles";
-import useNetworkCheck from "../hooks/useNetworkCheck";
 import LinearGradient from "react-native-linear-gradient";
-import debounce from "lodash/debounce";
+import useWeatherScreenLogic from "../hooks/useWeatherScreenLogic";
 
 const WeatherScreen = () => {
-  const { weather, loading, error, fetchWeather } = useContext(WeatherContext);
-  const { darkMode, toggleTheme } = useContext(ThemeContext);
-  const isConnected = useNetworkCheck();
-  const [input, setInput] = useState("");
-
-  const debouncedFetchWeather = useCallback(
-    debounce((city) => {
-      if (city.trim().length === 0) return;
-  
-      if (!isConnected) {
-        Alert.alert("No Internet", "Please check your connection and try again.");
-        return;
-      }
-  
-      fetchWeather(city);
-    }, 500),
-    [isConnected, fetchWeather]
-  );
+  const {
+    weather,
+    loading,
+    error,
+    darkMode,
+    input,
+    handleInputChange,
+    handleThemeToggle,
+  } = useWeatherScreenLogic();
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -44,7 +30,7 @@ const WeatherScreen = () => {
         style={styles.container}
       >
         <View style={styles.topSection}>
-          <Switch value={darkMode} onValueChange={toggleTheme} />
+          <Switch value={darkMode} onValueChange={handleThemeToggle} />
           <Text style={[styles.title, darkMode ? styles.darkText : styles.lightText]}>
             Weather App
           </Text>
@@ -56,17 +42,14 @@ const WeatherScreen = () => {
             placeholder="Enter city name"
             placeholderTextColor={darkMode ? "#bbb" : "#555"}
             value={input}
-            onChangeText={(text) => {
-              setInput(text);
-              debouncedFetchWeather(text);
-            }}
+            onChangeText={handleInputChange}
           />
         </View>
 
         {loading && <ActivityIndicator size="large" color={darkMode ? "white" : "blue"} />}
         {error && <Text style={[styles.error, darkMode ? styles.darkText : styles.lightText]}>{error}</Text>}
 
-        {weather && !error && <WeatherCard weather={weather} darkMode={darkMode} />}
+        {weather && !error && <WeatherCard />}
       </LinearGradient>
     </SafeAreaView>
   );
